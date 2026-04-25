@@ -1,83 +1,62 @@
-# 🎬 Real Estate Video Factory
+# 🌀 NexusFrame — Quantum AI Video Factory v2.5
 
-**Автоматическая фабрика для создания рекламных роликов недвижимости**
+[English] | [Русский](README.RU.md)
 
-Парсинг объявлений → AI обработка → Генерация видео → Экспорт
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Sora Migration](https://img.shields.io/badge/Sora-Migration%20Layer-orange)](https://github.com/homgorn/nexusframe-ai-factory)
+[![Compliance](https://img.shields.io/badge/Compliance-C2PA%20Signed-green)](https://c2pa.org/)
+
+**NexusFrame** is an autonomous AI-driven factory for creating high-end real estate video advertisements. It serves as a drop-in replacement for OpenAI Sora, orchestrating multiple SOTA engines for aesthetic supremacy.
 
 ---
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### 1. Установите зависимости
-
+### 1. Prerequisites
 **macOS:**
 ```bash
 brew install docker python3 node ffmpeg
 ```
 
-### 2. Настройте API ключи
+### 2. Set up API Keys
+Edit your `.env` file and add your keys:
+*   **OpenAI/Claude:** For Aura Intelligence brain.
+*   **ComfyUI API:** For photorealistic generations.
+*   **Arweave Key:** For permanent storage.
 
-Отредактируйте файл `.env` и добавьте ваши API ключи:
-- OpenAI (опционально)
-- Claude (опционально)
-- Kling, Runway (платные, опционально)
-
-### 3. Запустите проект
-
+### 3. Launch the Symphony
 ```bash
-cd ~/Desktop/video-factory
-
-# Сделать скрипты исполняемыми
+# Make scripts executable
 chmod +x scripts/*.sh
 
-# Запустить сервисы
+# Start the factory
 ./scripts/start.sh
 ```
 
-### 4. Откройте приложение
-
-- **API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
-- **MinIO Console**: http://localhost:9001 (minioadmin/minioadmin)
-
----
-
-## ✨ Возможности
-
-### Парсинг объявлений
-- ✅ CIAN.ru
-- ✅ Avito.ru  
-- ✅ Yandex.Realty
-- ✅ Domclick.ru
-
-### AI Генерация
-**Бесплатные:**
-- FFmpeg (быстро, без AI)
-- Google Colab (CogVideoX, HunyuanVideo)
-- Kaggle Notebooks
-- HuggingFace Spaces
-
-**Платные:**
-- Kling API ($6.99/month)
-- Runway Gen-4 ($95/month)
-- OpenAI Sora
-- Google Veo
-
-### Настройки видео
-- 📐 Форматы: 16:9, 9:16, 1:1, 4:5
-- 🎨 Качество: 720p, 1080p, 4K
-- ⏱️ Длина: 15-90 секунд
-- 🎵 Музыка: Ambient, Upbeat, Classical
-- 🎙️ Озвучка: AI голоса (мужской/женский)
-- 💬 Субтитры и водяные знаки
+### 4. Access the Control Center
+*   **Quantum Dashboard:** `http://localhost:3000`
+*   **API Docs:** `http://localhost:8000/docs`
+*   **Landing Page:** [https://homgorn.github.io/nexusframe-ai-factory/](https://homgorn.github.io/nexusframe-ai-factory/)
 
 ---
 
-## 📖 Использование
+## ✨ Features
 
-### Через API
+### 🧠 Aura Intelligence
+*   **Autonomous Research:** Scans Hugging Face for new LoRAs and styles.
+*   **Aesthetic Scoring:** Rejects videos with scores below 8.5/10.
 
-**Парсинг объявления:**
+### 🎹 Multi-Engine Orchestration
+*   **ComfyUI (FLUX.1):** Cinematic photorealism.
+*   **Gaussian Splatting (3DGS):** Virtual DOP 3D property tours.
+*   **Manim (v0.20):** Interactive property data & charts.
+*   **Remotion (v4.0):** Frame-perfect React orchestration.
+
+---
+
+## 📖 Usage (API)
+
+### Create a Production Run:
 ```bash
 curl -X POST http://localhost:8000/api/parse-listing \
   -H "Content-Type: application/json" \
@@ -86,128 +65,27 @@ curl -X POST http://localhost:8000/api/parse-listing \
     "config": {
       "duration": 30,
       "quality": "1080p",
-      "ai_provider": "ffmpeg"
+      "engine": "symphony-auto"
     }
   }'
 ```
 
-**Проверить статус:**
-```bash
-curl http://localhost:8000/api/job/{job_id}
+---
+
+## 📁 Project Structure
+```text
+nexusframe/
+├── adapters/           # Engine adapters (Comfy, Manim, Remotion)
+├── backend/            # FastAPI Quantum Orchestrator
+├── frontend/           # Ultra-Premium Dashboard (Next.js)
+├── scripts/            # Utility scripts (start, stop, logs)
+├── index.html          # SEO Landing Page
+└── README.md           # This file
 ```
 
 ---
 
-## 🛠️ Команды
+## ⚖️ License
+Licensed under the **Apache License, Version 2.0**.
 
-```bash
-# Запуск всех сервисов
-./scripts/start.sh
-
-# Остановка
-./scripts/stop.sh
-
-# Просмотр логов
-./scripts/logs.sh api
-./scripts/logs.sh postgres
-
-# Перезапуск
-docker-compose restart api
-```
-
----
-
-## 📁 Структура проекта
-
-```
-video-factory/
-├── backend/              # FastAPI приложение
-│   ├── main.py          # Главный файл API
-│   ├── requirements.txt # Python зависимости
-│   └── Dockerfile       # Docker образ
-├── frontend/            # React/Next.js (TODO)
-├── scripts/             # Утилиты
-│   ├── start.sh        # Запуск
-│   ├── stop.sh         # Остановка
-│   └── logs.sh         # Логи
-├── uploads/             # Загруженные файлы
-├── outputs/             # Готовые видео
-├── temp/                # Временные файлы
-├── docker-compose.yml   # Конфигурация сервисов
-├── .env                 # Переменные окружения
-└── README.md            # Документация
-```
-
----
-
-## 🔧 Настройка AI моделей
-
-### Google Colab (бесплатно)
-
-1. Откройте новый notebook: https://colab.research.google.com/
-2. Установите ngrok и запустите сервер
-3. Скопируйте URL ngrok в `.env` файл
-4. API автоматически будет использовать Colab
-
-### Платные API
-
-Добавьте ключи в `.env`:
-```bash
-KLING_API_KEY=your_key
-RUNWAY_API_KEY=your_key
-```
-
----
-
-## 📊 Мониторинг
-
-- **API Docs**: http://localhost:8000/docs (Swagger UI)
-- **MinIO Console**: http://localhost:9001 (файловое хранилище)
-- **Database**: PostgreSQL на порту 5432
-
----
-
-## 🐛 Решение проблем
-
-**Docker не запускается:**
-```bash
-# macOS
-brew install --cask docker
-open -a Docker
-
-# Проверка
-docker --version
-docker-compose --version
-```
-
-**Порты заняты:**
-```bash
-# Проверить что использует порт 8000
-lsof -i :8000
-
-# Остановить процесс
-kill -9 <PID>
-```
-
-**Нет прав на скрипты:**
-```bash
-chmod +x scripts/*.sh
-```
-
----
-
-## 📞 Поддержка
-
-- 📖 Документация: http://localhost:8000/docs
-- 🐛 Issues: GitHub Issues
-- 💬 Вопросы: Telegram/Discord
-
----
-
-## 📄 Лицензия
-
-MIT License - свободное использование
-
----
-
-**Made with ❤️ for real estate professionals**
+*Made with ❤️ for the Post-Sora Era.*
