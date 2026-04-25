@@ -1,0 +1,21 @@
+[submodule "vendor/hyperframes"]
+	path = vendor/hyperframes
+	url = https://github.com/heygen-com/hyperframes.git
+[submodule "vendor/digitalsamba-toolkit"]
+	path = vendor/digitalsamba-toolkit
+	url = https://github.com/digitalsamba/claude-code-video-toolkit.git
+[submodule "vendor/manim"]
+	path = vendor/manim
+	url = https://github.com/ManimCommunity/manim.git
+[submodule "vendor/remotion"]
+	path = vendor/remotion
+	url = https://github.com/remotion-dev/remotion.git
+[submodule "vendor/reframemotion"]
+	path = vendor/reframemotion
+	url = https://github.com/homgorn/reframemotion.git
+[submodule "vendor/open-harness"]
+	path = vendor/open-harness
+	url = https://github.com/MaxGfeller/open-harness.git
+[submodule "vendor/hy-world-2.0"]
+	path = vendor/hy-world-2.0
+	url = https://github.com/homgorn/HY-World-2.0-Generating-and-Simulating-3D-Worlds.git

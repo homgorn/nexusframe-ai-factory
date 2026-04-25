@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  # ==================== BACKEND API ====================
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: video_factory_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/video_factory
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+    volumes:
+      - ./backend:/app
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # ==================== POSTGRESQL ====================
+  postgres:
+    image: postgres:16-alpine
+    container_name: video_factory_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=video_factory
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # ==================== REDIS ====================
+  redis:
+    image: redis:7-alpine
+    container_name: video_factory_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # ==================== MINIO (S3-compatible storage) ====================
+  minio:
+    image: minio/minio:latest
+    container_name: video_factory_minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  # ==================== CELERY WORKER ====================
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: video_factory_worker
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/video_factory
+      - REDIS_URL=redis://redis:6379/0
+      - REMOTION_API_URL=http://remotion-engine:8001
+    volumes:
+      - ./backend:/app
+      - ./outputs:/app/outputs
+    command: celery -A worker.celery_app worker --loglevel=info
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # ==================== ENGINE: REMOTION ====================
+  remotion-engine:
+    build:
+      context: .
+      dockerfile: engines/remotion/Dockerfile
+    container_name: engine_remotion
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./vendor/remotion:/app/vendor/remotion
+      - ./outputs:/app/outputs
+    restart: unless-stopped
+
+
+  # ==================== ORCHESTRATION: OPEN-HARNESS ====================
+  open-harness:
+    build:
+      context: .
+      dockerfile: engines/open-harness/Dockerfile
+    container_name: orchestrator_open_harness
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./vendor/open-harness:/app/vendor/open-harness
+    restart: unless-stopped
+
+  # ==================== ENGINE: HYPERFRAMES ====================
+  hyperframes-engine:
+    build:
+      context: .
+      dockerfile: engines/hyperframes/Dockerfile
+    container_name: engine_hyperframes
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./vendor/hyperframes:/app/vendor/hyperframes
+      - ./outputs:/app/outputs
+    restart: unless-stopped
+
+  # ==================== ENGINE: MANIM ====================
+  manim-engine:
+    build:
+      context: .
+      dockerfile: engines/manim/Dockerfile
+    container_name: engine_manim
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./vendor/manim:/app/vendor/manim
+      - ./outputs:/app/outputs
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
